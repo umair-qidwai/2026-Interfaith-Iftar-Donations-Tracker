@@ -324,7 +324,7 @@
       // Pull your exact keys from the API response
       const yearTotal = Number(row["2026 Donations Total"] || 0);
       const allTimeTotal = Number(row["All year Donations Total"] || 0);
-      const volunteerHours = Number(row["Total Volunteer hours pledged"] || 0);
+      const volunteerHours = Number(row["Total Volunteer hours pledged ($ Amount)"] || 0);
 
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
