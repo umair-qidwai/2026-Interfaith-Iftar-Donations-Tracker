@@ -140,6 +140,11 @@
       color: var(--muted);
       font-size: 13px;
     }
+    .smallSubtle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
     .bar {
       height: 10px;
       border-radius: 999px;
@@ -273,7 +278,7 @@
       `;
     }
 
-    function cardHTML(title, valueText, goalText, pct){
+    function cardHTML(title, valueText, goalText, pct, extraText = ""){
       const pctText = `${Math.round(pct * 100)}%`;
       return `
         <div class="card">
@@ -285,6 +290,7 @@
             ${dialSVG(pct, pctText)}
             <div>
               <div class="big">${valueText}</div>
+              ${extraText ? `<div class="smallSubtle">${extraText}</div>` : ""}
               <div class="small">Goal: ${goalText}</div>
               <div class="bar"><div style="width:${Math.round(pct * 100)}%"></div></div>
             </div>
@@ -324,7 +330,8 @@
       // Pull your exact keys from the API response
       const yearTotal = Number(row["2026 Donations Total"] || 0);
       const allTimeTotal = Number(row["All year Donations Total"] || 0);
-      const volunteerHours = Number(row["Total Volunteer hours pledged ($ Amount)"] || 0);
+      const volunteerHours = Number(row["2026 Volunteer hours pledged"] || 0);
+      const volunteerDollarAmount = Number(row["2026 hours pledged $ Amount"] || 0);
 
       const grid = document.getElementById("grid");
       grid.innerHTML = "";
@@ -347,9 +354,15 @@
 
       // Card 3: Volunteer hours
       {
-        const pct = GOALS.volunteerHours > 0 ? clamp01(volunteerHours / GOALS.volunteerHours) : 0;
+        const pct = GOALS.volunteerHours > 0 ? clamp01(volunteerDollarAmount / GOALS.volunteerHours) : 0;
         grid.insertAdjacentHTML("beforeend",
-          cardHTML("Volunteer Hours", number(volunteerHours), number(GOALS.volunteerHours), pct)
+          cardHTML(
+            "Volunteer Hours",
+            money(volunteerDollarAmount),
+            money(GOALS.volunteerHours),
+            pct,
+            `(${number(volunteerHours)} hours)`
+          )
         );
       }
     }
